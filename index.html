@@ -4,29 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My CV</title>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #eaeaea;
+            background-color: #f4f4f4;
         }
         header {
             background: #333;
             color: #fff;
             padding: 10px;
             text-align: center;
-            width: 100%;
         }
         nav {
-            background: orange;
+            background: navy;
             padding: 10px;
             text-align: center;
-            display: block; /* Display the navigation */
         }
         nav a {
             margin: 0 15px;
-            color: navy blue;
+            color: #fff;
             text-decoration: none;
             font-size: 16px;
         }
@@ -37,15 +37,15 @@
             padding: 20px;
             max-width: 600px;
             margin: 20px auto;
-            background: blue;
+            background: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .form-container {
-            display: none; /* Hide all content initially */
+            display: none;
         }
         .form-container.active {
-            display: block; /* Show the active content */
+            display: block;
         }
         label {
             font-weight: bold;
@@ -60,14 +60,11 @@
             border-radius: 5px;
             font-size: 16px;
         }
-        input::placeholder, textarea::placeholder {
-            color: #888;
-        }
         button {
             width: 100%;
             padding: 15px;
             background-color: #333;
-            color: yellow;
+            color: #fff;
             border: none;
             border-radius: 5px;
             font-size: 16px;
@@ -79,9 +76,6 @@
         footer {
             text-align: center;
             margin-top: 20px;
-            position: relative;
-            width: 100%;
-            padding: 10px;
         }
     </style>
 </head>
@@ -91,19 +85,19 @@
     </header>
     
     <nav id="navigation">
-        <a href="#" onclick="showPage('home')" contenteditable="true">Home</a>
-        <a href="#" onclick="showPage('personal')" contenteditable="true">Personal Information</a>
-        <a href="#" onclick="showPage('education')" contenteditable="true">Education</a>
-        <a href="#" onclick="showPage('experience')" contenteditable="true">Work Experience</a>
-        <a href="#" onclick="showPage('skills')" contenteditable="true">Skills</a>
-        <a href="#" onclick="showPage('projects')" contenteditable="true">Projects</a>
-        <a href="#" onclick="showPage('contact')" contenteditable="true">Contact</a>
+        <a href="#" onclick="showPage('home')">Home</a>
+        <a href="#" onclick="showPage('personal')">Personal Information</a>
+        <a href="#" onclick="showPage('education')">Education</a>
+        <a href="#" onclick="showPage('experience')">Work Experience</a>
+        <a href="#" onclick="showPage('skills')">Skills</a>
+        <a href="#" onclick="showPage('projects')">Projects</a>
+        <a href="#" onclick="showPage('contact')">Contact</a>
     </nav>
 
     <div class="container">
         <div id="home" class="form-container active">
-            <h2 contenteditable="true">Welcome to My CV</h2>
-            <p>This is a dynamic curriculum vitae. Please navigate through the sections.</p>
+            <h2 contenteditable="true">Welcome to ThikhedzoCV</h2>
+            <p>Explore my professional journey and personal achievements by navigating through the various sections of this CV.</p>
         </div>
         
         <div id="personal" class="form-container">
@@ -113,37 +107,17 @@
             <label>Surname</label>
             <input type="text" id="surname" placeholder="Enter your surname" />
             <label>Identity Number</label>
-            <input type="text" id="identityNumberDisplay" placeholder="Enter your identity number" />
+            <input type="text" id="identityNumber" placeholder="Enter your identity number" />
             <label>Date of Birth</label>
             <input type="text" id="dob" placeholder="Enter your date of birth (DD/MM/YYYY)" />
             <label>Email</label>
             <input type="text" id="email" placeholder="Enter your email address" />
             <label>Phone</label>
             <input type="text" id="phone" placeholder="Enter your phone number" />
-            <label>Race</label>
-            <input type="text" id="race" placeholder="Enter your race" />
-            <label>Sex</label>
-            <input type="text" id="sex" placeholder="Enter your gender" />
             <label>Nationality</label>
             <input type="text" id="nationality" placeholder="Enter your nationality" />
-            <label>Province</label>
-            <input type="text" id="province" placeholder="Enter your province" />
-            <label>City</label>
-            <input type="text" id="city" placeholder="Enter your city" />
-            <label>Postal Code</label>
-            <input type="text" id="postalCode" placeholder="Enter your postal code" />
-            <label>Street Address</label>
-            <input type="text" id="streetAddress" placeholder="Enter your street address" />
-            <label>LinkedIn</label>
-            <input type="text" id="linkedin" placeholder="Enter your LinkedIn profile URL" />
-            <label>Criminal Record</label>
-            <input type="text" id="criminalRecord" placeholder="Enter 'Yes' or 'No' for criminal record" />
-            <label>Languages</label>
-            <input type="text" id="language1" placeholder="Enter your first language" />
-            <input type="text" id="language2" placeholder="Enter your second language (if any)" />
-            <label>Bio</label>
-            <textarea id="bio" placeholder="Write a short bio about yourself"></textarea>
             <button onclick="savePersonalInfo()">Save Personal Info</button>
+            <button onclick="deletePersonalInfo()">Delete Personal Info</button>
         </div>
         
         <div id="education" class="form-container">
@@ -154,15 +128,10 @@
             <input type="text" id="fieldOfStudy" placeholder="Enter your field of study" />
             <label>Institution</label>
             <input type="text" id="institution" placeholder="Enter the institution's name" />
-            <label>Location</label>
-            <input type="text" id="location" placeholder="Enter the location of the institution" />
             <label>Graduation Date</label>
             <input type="text" id="graduationDate" placeholder="Enter your graduation date (MM/YYYY)" />
-            <label>Relevant Coursework</label>
-            <textarea id="coursework" placeholder="List relevant coursework"></textarea>
-            <label>Honors</label>
-            <input type="text" id="honors" placeholder="Enter any honors or distinctions" />
             <button onclick="saveEducation()">Save Education</button>
+            <button onclick="deleteEducation()">Delete Education</button>
         </div>
         
         <div id="experience" class="form-container">
@@ -174,6 +143,7 @@
             <label>Duration</label>
             <input type="text" id="duration" placeholder="Enter the duration (e.g., 2018-2022)" />
             <button onclick="saveExperience()">Save Experience</button>
+            <button onclick="deleteExperience()">Delete Experience</button>
         </div>
         
         <div id="skills" class="form-container">
@@ -183,16 +153,18 @@
             <label>Skill 2</label>
             <input type="text" id="skill2" placeholder="Enter your second skill" />
             <label>Skill 3</label>
-            <input type="text" id="skill3" placeholder="Enter your third skill" 
+            <input type="text" id="skill3" placeholder="Enter your third skill" />
             <label>Skill 4</label>
             <input type="text" id="skill4" placeholder="Enter your fourth skill" />
             <button onclick="saveSkills()">Save Skills</button>
+            <button onclick="deleteSkills()">Delete Skills</button>
         </div>
         
         <div id="projects" class="form-container">
             <h2 contenteditable="true">Projects</h2>
-            <textarea id="projects" placeholder="Describe your projects"></textarea>
+            <textarea id="projectsDescription" placeholder="Describe your projects"></textarea>
             <button onclick="saveProjects()">Save Projects</button>
+            <button onclick="deleteProjects()">Delete Projects</button>
         </div>
         
         <div id="contact" class="form-container">
@@ -208,111 +180,139 @@
             </form>
         </div>
     </div>
-</div>
 
-<footer>
-    <p>© 2024 Raedani Thikhedzo cv</p>
-</footer>
+    <footer>
+        <p>© 2024 Thikhedzo. All rights reserved.</p>
+    </footer>
 
-<script>
-    function savePersonalInfo() {
-        const personalInfo = {
-            fullNames: document.getElementById("fullNames").value,
-            surname: document.getElementById("surname").value,
-            identityNumber: document.getElementById("identityNumberDisplay").value,
-            dob: document.getElementById("dob").value,
-            email: document.getElementById("email").value,
-            phone: document.getElementById("phone").value,
-            race: document.getElementById("race").value,
-            sex: document.getElementById("sex").value,
-            nationality: document.getElementById("nationality").value,
-            province: document.getElementById("province").value,
-            city: document.getElementById("city").value,
-            postalCode: document.getElementById("postalCode").value,
-            streetAddress: document.getElementById("streetAddress").value,
-            linkedin: document.getElementById("linkedin").value,
-            criminalRecord: document.getElementById("criminalRecord").value,
-            language1: document.getElementById("language1").value,
-            language2: document.getElementById("language2").value,
-            bio: document.getElementById("bio").value,
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
-        localStorage.setItem('personalInfo', JSON.stringify(personalInfo));
-        alert('Personal Information Saved!');
-    }
 
-    function saveEducation() {
-        const education = {
-            degree: document.getElementById("degree").value,
-            fieldOfStudy: document.getElementById("fieldOfStudy").value,
-            institution: document.getElementById("institution").value,
-            location: document.getElementById("location").value,
-            graduationDate: document.getElementById("graduationDate").value,
-            coursework: document.getElementById("coursework").value,
-            honors: document.getElementById("honors").value,
-        };
-        localStorage.setItem('education', JSON.stringify(education));
-        alert('Education Saved!');
-    }
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-    function saveExperience() {
-        const experience = {
-            position: document.getElementById("position").value,
-            company: document.getElementById("company").value,
-            duration: document.getElementById("duration").value,
-        };
-        localStorage.setItem('experience', JSON.stringify(experience));
-        alert('Experience Saved!');
-    }
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.form-container');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
 
-    function saveSkills() {
-        const skills = {
-            skill1: document.getElementById("skill1").value,
-            skill2: document.getElementById("skill2").value,
-            skill3: document.getElementById("skill3").value,
-        };
-        localStorage.setItem('skills', JSON.stringify(skills));
-        alert('Skills Saved!');
-    }
+        // Save personal information
+        function savePersonalInfo() {
+            const personalInfo = {
+                fullNames: document.getElementById("fullNames").value,
+                surname: document.getElementById("surname").value,
+                identityNumber: document.getElementById("identityNumber").value,
+                dob: document.getElementById("dob").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+                nationality: document.getElementById("nationality").value,
+            };
+            db.collection("cvData").doc("personalInfo").set(personalInfo)
+                .then(() => alert("Personal information saved successfully!"))
+                .catch(error => console.error("Error saving personal information: ", error));
+        }
 
-    function saveProjects() {
-        const projects = document.getElementById("projects").value;
-        localStorage.setItem('projects', projects);
-        alert('Projects Saved!');
-    }
+        function deletePersonalInfo() {
+            db.collection("cvData").doc("personalInfo").delete()
+                .then(() => alert("Personal information deleted successfully!"))
+                .catch(error => console.error("Error deleting personal information: ", error));
+        }
 
-    function showPage(pageId) {
-        const pages = document.querySelectorAll('.form-container');
-        pages.forEach(page => page.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-    }
+        // Save education information
+        function saveEducation() {
+            const education = {
+                degree: document.getElementById("degree").value,
+                fieldOfStudy: document.getElementById("fieldOfStudy").value,
+                institution: document.getElementById("institution").value,
+                graduationDate: document.getElementById("graduationDate").value,
+            };
+            db.collection("cvData").doc("education").set(education)
+                .then(() => alert("Education information saved successfully!"))
+                .catch(error => console.error("Error saving education information: ", error));
+        }
 
-    function sendContact(event) {
-        event.preventDefault();
-        alert('Message sent!');
-    }
+        function deleteEducation() {
+            db.collection("cvData").doc("education").delete()
+                .then(() => alert("Education information deleted successfully!"))
+                .catch(error => console.error("Error deleting education information: ", error));
+        }
 
-    // Load saved personal info on page load
-    window.onload = function() {
-        const personalInfo = JSON.parse(localStorage.getItem('personalInfo')) || {};
-        document.getElementById("fullNames").value = personalInfo.fullNames || '';
-        document.getElementById("surname").value = personalInfo.surname || '';
-        document.getElementById("identityNumberDisplay").value = personalInfo.identityNumber || '';
-        document.getElementById("dob").value = personalInfo.dob || '';
-        document.getElementById("email").value = personalInfo.email || '';
-        document.getElementById("phone").value = personalInfo.phone || '';
-        document.getElementById("race").value = personalInfo.race || '';
-        document.getElementById("sex").value = personalInfo.sex || '';
-        document.getElementById("nationality").value = personalInfo.nationality || '';
-        document.getElementById("province").value = personalInfo.province || '';
-        document.getElementById("city").value = personalInfo.city || '';
-        document.getElementById("postalCode").value = personalInfo.postalCode || '';
-        document.getElementById("streetAddress").value = personalInfo.streetAddress || '';
-        document.getElementById("linkedin").value = personalInfo.linkedin || '';
-        document.getElementById("criminalRecord").value = personalInfo.criminalRecord || '';
-        document.getElementById("language1").value = personalInfo.language1 || '';
-        document.getElementById("language2").value = personalInfo.language2 || '';
-        document.getElementById("bio").value = personalInfo.bio || '';
-    }
-</script>
+        // Save work experience information
+        function saveExperience() {
+            const experience = {
+                position: document.getElementById("position").value,
+                company: document.getElementById("company").value,
+                duration: document.getElementById("duration").value,
+            };
+            db.collection("cvData").doc("experience").set(experience)
+                .then(() => alert("Work experience saved successfully!"))
+                .catch(error => console.error("Error saving work experience: ", error));
+        }
+
+        function deleteExperience() {
+            db.collection("cvData").doc("experience").delete()
+                .then(() => alert("Work experience deleted successfully!"))
+                .catch(error => console.error("Error deleting work experience: ", error));
+        }
+
+        // Save skills information
+        function saveSkills() {
+            const skills = {
+                skill1: document.getElementById("skill1").value,
+                skill2: document.getElementById("skill2").value,
+                skill3: document.getElementById("skill3").value,
+                skill4: document.getElementById("skill4").value,
+            };
+            db.collection("cvData").doc("skills").set(skills)
+                .then(() => alert("Skills saved successfully!"))
+                .catch(error => console.error("Error saving skills: ", error));
+        }
+
+        function deleteSkills() {
+            db.collection("cvData").doc("skills").delete()
+                .then(() => alert("Skills deleted successfully!"))
+                .catch(error => console.error("Error deleting skills: ", error));
+        }
+
+        // Save projects information
+        function saveProjects() {
+            const projects = {
+                description: document.getElementById("projectsDescription").value,
+            };
+            db.collection("cvData").doc("projects").set(projects)
+                .then(() => alert("Projects saved successfully!"))
+                .catch(error => console.error("Error saving projects: ", error));
+        }
+
+        function deleteProjects() {
+            db.collection("cvData").doc("projects").delete()
+                .then(() => alert("Projects deleted successfully!"))
+                .catch(error => console.error("Error deleting projects: ", error));
+        }
+
+        // Send contact information
+        function sendContact(event) {
+            event.preventDefault();
+            const contact = {
+                name: document.getElementById("contactName").value,
+                email: document.getElementById("contactEmail").value,
+                message: document.getElementById("contactMessage").value,
+            };
+            alert("Message sent successfully! We will get back to you soon.");
+            document.getElementById("contactName").value = '';
+            document.getElementById("contactEmail").value = '';
+            document.getElementById("contactMessage").value = '';
+        }
+    </script>
 </body>
-</html> 
+</html>
